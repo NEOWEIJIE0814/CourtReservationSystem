@@ -6,15 +6,29 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>User Profile</title>
     <style>
-         body {
+        body {
             font-family: Arial, sans-serif;
             background: url('images/profile_background.jpg');
             margin: 0;
             color: white;
             display: flex;
+            flex-direction: column;
             align-items: center;
             justify-content: center;
             height: 100vh;
+        }
+
+        .navbar {
+            background-color: white;
+            overflow: hidden;
+            padding: 15px;
+            text-align: center;
+            color: #ffcc00;
+            width: 100%;
+        }
+
+        .navbar h1 {
+            margin: 0;
         }
 
         .profile-card {
@@ -25,6 +39,9 @@
             max-width: 400px;
             width: 100%;
             box-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
+            margin-top: 20px;
+            margin-bottom: 20px;
+            /* Add margin to separate from the button */
         }
 
         .profile-card h1 {
@@ -46,16 +63,52 @@
             text-decoration: none;
             font-weight: bold;
         }
+
+        .back-btn {
+            background-color: #ffcc00;
+            color: white;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-bottom: 10px;
+        }
+
+        .update-btn {
+            background-color: #ffcc00;
+            color: white;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        .delete-btn {
+            background-color: #ffcc00;
+            color: white;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
     </style>
 </head>
 
 <body>
-    <div class="profile-container">
-        <div class="profile-card" id="profileCard">
-            <h1>User Profile</h1>
-            <!-- Display user data here -->
-        </div>
+    <div class="navbar">
+        <h1>User Profile</h1>
     </div>
+
+    <div class="profile-card" id="profileCard">
+        <h1>User Profile</h1>
+        <!-- Display user data here -->
+    </div>
+
+    <button class="update-btn" onclick="updateProfile()">Update Profile</button>
+    <button class="delete-btn" onclick="deleteProfile()">Delete Profile</button>
+
 
     <script>
         // Use AJAX to fetch user data from the server
@@ -83,6 +136,60 @@
                 // Add more information as needed
             }
         }
+
+        // ...
+
+        // Function to handle the "Update Profile" button click
+        function updateProfile() {
+            var newName = prompt("Enter your new name:");
+            var newEmail = prompt("Enter your new email:");
+            var newPassword = prompt("Enter your new password:");
+
+            if (newName !== null && newEmail !== null && newPassword !== null) {
+                var xhr = new XMLHttpRequest();
+                xhr.onreadystatechange = function () {
+                    if (xhr.readyState === 4) {
+                        var response = JSON.parse(xhr.responseText);
+                        if (response.success) {
+                            alert("Profile updated successfully!");
+                            // Reload the user data after the update
+                            window.location.reload();
+                        } else {
+                            alert("Error updating profile: " + response.error);
+                        }
+                    }
+                };
+                xhr.open("POST", "update_profile.php", true);
+                xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+                xhr.send("new_name=" + newName + "&new_email=" + newEmail + "&new_password=" + newPassword);
+            }
+        }
+
+        // ...
+
+        // Function to handle the "Delete Profile" button click
+        function deleteProfile() {
+            var confirmDelete = confirm("Are you sure you want to delete your profile?");
+            if (confirmDelete) {
+                var xhr = new XMLHttpRequest();
+                xhr.onreadystatechange = function () {
+                    if (xhr.readyState === 4) {
+                        var response = JSON.parse(xhr.responseText);
+                        if (response.success) {
+                            alert("Profile deleted successfully!");
+                            // Redirect to the login page after profile deletion
+                            window.location.href = "login.html";
+                        } else {
+                            alert("Error deleting profile: " + response.error);
+                        }
+                    }
+                };
+                xhr.open("POST", "delete_profile.php", true);
+                xhr.send();
+            }
+        }
+
+
     </script>
 </body>
 
