@@ -1,0 +1,76 @@
+<?php
+session_start(); // Start the session to access session variables
+
+// Check if the user_id session variable is set
+if (isset($_SESSION["user_id"])) {
+    // Access other session variables as needed (e.g., $_SESSION["user_name"])
+
+    // Your HTML content here
+    echo "<h1>Welcome, " . $_SESSION["user_name"] . "!</h1>";
+} else {
+    // Redirect to the login page if session variables are not set
+    header("Location: login.html");
+    exit();
+}
+?>
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Profile</title>
+    <!-- Add your stylesheets, meta tags, etc. here -->
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: url('images/profile_background.jpg'); /* Change the background image URL */
+            margin: 0;
+            color: white; /* Set text color to white for better visibility */
+        }
+
+        .profile-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            text-align: center;
+        }
+
+        .profile-card {
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.7); /* Add some transparency to the background */
+            border-radius: 10px;
+        }
+
+        .profile-card p {
+            margin: 10px 0;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Include the user_read.php content here using PHP include -->
+    <?php include 'user_read.php'; ?>
+
+    <div class="profile-container">
+        <div class="profile-card">
+            <h1>User Profile</h1>
+
+            <?php if (isset($user)) : ?>
+                <p>User ID: <?php echo $user["user_id"]; ?></p>
+                <p>Full Name: <?php echo $user["user_name"]; ?></p>
+                <p>Email: <?php echo $user["user_email"]; ?></p>
+                <!-- Add more information as needed -->
+            <?php else : ?>
+                <!-- Handle the case where user information is not found (optional) -->
+                <p>User not found.</p>
+            <?php endif; ?>
+        </div>
+    </div>
+
+    <!-- Add more HTML content as needed -->
+
+</body>
+
+</html>
